@@ -42,7 +42,7 @@ static NSString* const kTypeKey = @"type";
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    if ([@"create" isEqualToString:call.method])
+    if ([@"create_plaid_link" isEqualToString:call.method])
         [self createWithArguments: call.arguments withResult:result];
     else if ([@"open" isEqualToString:call.method])
         [self openWithResult:result];

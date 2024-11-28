@@ -119,7 +119,7 @@ public class PlaidFlutterPlugin implements FlutterPlugin, MethodCallHandler, Eve
   @Override
   public void onMethodCall(MethodCall call, @NonNull Result result) {
       switch (call.method) {
-          case "create":
+          case "create_plaid_link":
               this.create(call.arguments(), result);
               break;
           case "open":

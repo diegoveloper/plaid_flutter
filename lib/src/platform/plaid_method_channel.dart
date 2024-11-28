@@ -35,7 +35,7 @@ class PlaidMethodChannel extends PlaidPlatformInterface {
   /// Creates a handler for Plaid Link. A one-time use object used to open a Link session.
   @override
   Future<void> create({required LinkTokenConfiguration configuration}) async {
-    await _channel.invokeMethod('create', configuration.toJson());
+    await _channel.invokeMethod('create_plaid_link', configuration.toJson());
   }
 
   /// Open Plaid Link by calling open on the Handler object.
