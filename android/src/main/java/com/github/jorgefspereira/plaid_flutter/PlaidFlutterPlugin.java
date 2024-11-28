@@ -118,6 +118,7 @@ public class PlaidFlutterPlugin implements FlutterPlugin, MethodCallHandler, Eve
 
   @Override
   public void onMethodCall(MethodCall call, @NonNull Result result) {
+      NSLog(@"Kikoff method: %@", call.method);
       switch (call.method) {
           case "create_plaid_link":
               this.create(call.arguments(), result);
