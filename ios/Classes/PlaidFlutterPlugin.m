@@ -42,6 +42,7 @@ static NSString* const kTypeKey = @"type";
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
+      NSLog(@"Kikoff method: %@", call.method);
     if ([@"create_plaid_link" isEqualToString:call.method])
         [self createWithArguments: call.arguments withResult:result];
     else if ([@"open" isEqualToString:call.method])
@@ -112,13 +113,12 @@ static NSString* const kTypeKey = @"type";
 
     PLKOnEventHandler eventHandler = ^(PLKLinkEvent *event) {
         __strong typeof(self) strongSelf = weakSelf;
-        
         [strongSelf sendEventWithArguments:@{kTypeKey: kOnEventType,
-                                             kNameKey: [PlaidFlutterPlugin stringForEventName: event.eventName] ?: @"",
-                                             kMetadataKey: [PlaidFlutterPlugin dictionaryFromEventMetadata: event.eventMetadata]}];
+                                             kNameKey: [PlaidFlutterPlugin stringForEventName:event.eventName] ?: @"",
+                                             kMetadataKey: [PlaidFlutterPlugin dictionaryFromEventMetadata:event.eventMetadata]}];
         if (event.eventName.value == PLKEventNameValueHandoff) {
-            // This event is only received after onSuccess. So it's safe to deallocate the handler now.
-            strongSelf->_linkHandler = nil;
+           // This event is only received after onSuccess. So it's safe to deallocate the handler now.
+                      strongSelf->_linkHandler = nil;
         }
     };
 
@@ -130,9 +130,16 @@ static NSString* const kTypeKey = @"type";
     NSError *error = nil;
     _linkHandler = [PLKPlaid createWithLinkTokenConfiguration:config error:&error];
     creationError = error;
-    
-    result(nil);
+
+    if (error) {
+        result([FlutterError errorWithCode:[@(error.code) stringValue]
+                                   message:error.localizedDescription
+                                   details:@"Failed to create PLKLinkHandler"]);
+    } else {
+        result(nil); 
+    }
 }
+
 
 - (void) openWithResult:(FlutterResult)result {
     if (_linkHandler) {
